@@ -65,7 +65,7 @@
 #### 3 MOUNT THE PARTITION INTO THE SPECIF FOLDER
     mount /dev/sdb1 /mnt/backups
     mount -t ext4 /dev/sdb1 /mnt/backups
-    mount -o ro -t ext4 /dev/sdb1 /mnt/backups
+    mount -o ro -t ext4 /dev/sdb1 /mnt/backups -- this is for read only permision
 
 ### FORCE THE LOG ROTATION - THIS CASE FOR THE SPECIFIC POSTGRESQL-COMMON
 logrotate -fv /etc/logrotate.d/postgresql-common
