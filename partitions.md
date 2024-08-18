@@ -159,7 +159,7 @@ mount -a
     devicepath mountpoint format options dump check
     UUID=20cad212-2017-45a0-9e55-134ae254a662 /mnt/backups ext4 defaults 0 2
     UUID=20cad212-2017-45a0-9e55-134ae254a662 /mnt/backups ext4 defaults,noexec,nosuid  0 2
-
+    /dev/vgroup/data /mnt/data ext4 defaults 0 2
 ### ONCE WE HAVE EDITED THE FSTAB - MOUNT THE FILESYSTEM LISTED IN THE FSTAB
     mount -a
     mount -av

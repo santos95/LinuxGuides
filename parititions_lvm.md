@@ -1,7 +1,7 @@
 ## INSTALL LVM  - often is not already installed in ubuntu
     sudp apt install lvm2
 
-### LVM ALLOWS TO WORK WITH MANY DRIVERS AS ONE DRIVE
+### LVM ALLOWS TO WORK WITH MANY DRIVERS AS ONE DRIVE - Service to manage logical volume - Logical Volume managment
 
 ### Steps to create logical volumes
     1 - create a physical volume 
@@ -9,14 +9,14 @@
     3 - create a logical volume
 
 ### hows this work
-    1 - PV - physical volumes - this are a actual disk partition reserved to lvm - to create it we have to create a partition and mark it as lvm partition 
-    2 - Volume Group - the volume group is placed on top of the pv, allows to combine the space of multiple disk or patitions as single one space - Responsable to store the date in the physical partitions - Works as a container. 
-    Works as device mapper, allowing the combination of multiple partitions from one or multiple disks.
+    1 - PV - physical volumes - this are a actual disk partition reserved to lvm - to create it we have to create a partition and mark it as lvm partition - Then we crate the actual pv, with the pvcreate command
+    2 - Volume Group - the volume group is placed on top of the pv, allows to combine the space of multiple disk or patitions as single one space - Responsable to store the data in the physical partitions - Works as a container - Map the logical partition with the actual physical storage, to store in the actual physical disk the data stored in the logical volumes. 
+    Works as device mapper, allowing the combination of multiple partitions from one or multiple disks. Mapper, allow to combine multiple devices to support the data storage from one or multiple logical partitions.
     3 - Logical Volume - Partition created on top of the volume group. This partitions is that we actually use it to create of filesystem and mounted into our system. 
-    With this we did not directly write in our disks, we use a layer in between that is responsible to storage the data in the physical part - volume group. 
+    With this we did not directly write in our disks, we use a layer in between that is responsible to storage the data in the physical part - volume group. The layer is refered to the volumgroup. 
 
 #### create a logical volumes from scratch from two devices used 100% to that
-#### 1 create pv 
+#### 1 create pv - Fist, is a good practice to format the disk, create a partition table, create the partition and set it to be used as lvm. Then we create the actual pv. 
     sudo parted 
     select /dev/sdb 
     mklabel - prompt - gpt
@@ -34,12 +34,12 @@
     set 1 lvm on 
     print - must show in flats - lvm
     sudo pvcreate /dev/sdc1
-##### to visualize info about pv
+##### to visualize info about pv - The units specify a amount of data which represent a block into the pv.
     sudo pvs - short info
     sudo pvdisplay - detailed info about pv
     sudo pvscan - to troubleshooting - scan or search for pv when we can't see it with pvs or pvdisplay
 
-#### 2 create a volume group - once that exists pv or is initialized we can create a volume group:
+#### 2 create a volume group - once that exists pv or is initialized we can create a volume group - To create a volume group we specify one or multitple pv to be used to support that volume group, so the disk that the vg will manage in order to handle the actual read/write process from the logical volumes to the physical volumes:
     pvcreate name /dev/sdbn /dev/sdcn - require the name and the required partitions to use
     pvcreate vgroup /dev/sdb1 /dev/sdc1 
 ##### to visualize
@@ -47,8 +47,7 @@
     sudo vgdisplay
     sudo vgscan
 
-#### 3 create logical volumes
-    Once we have volume group, we can create logical volumes on top: 
+#### 3 create logical volumes. Once we have volume group, we can create logical volumes on top: 
     lvcreate -L 10G -n data vgroup - lvcreate - create logical volume, - n for name, -L the size specify in units and -l to specify the size based on the % of free space in our volume group.
     lvcreate -n name [volume group]
     sudo lvcreate -L 10G -n data vgroup 
@@ -142,6 +141,21 @@
     lvextend -L 20GB /dev/vgroup/data extend the size of the lv to 20GB
     lvextend -L +1GB /dev/vgroup/data extend one 1gb to the size of the lv
     lvextend -l +100%FREE /dev/vgroup/data extend to the 100% of free space of lv
+
+### REMOVE LVM
+#### 1 - Chech the fstab config file and remove every entry that refers or mount a logical volume.
+nano /etc/fstab 
+#### 2 - Once that fstab entries for a logical volume, we can remove a logical volume:
+lvremove /dev/vgroup/data
+lvremove /dev/vgroup/backup
+#### 3 - Once that our logical volumes are removed we have to remove the volume group:
+vgremove vgroup 
+#### 4 - Once that our volume group is removed, we have to remove the physical volumes:
+pvremove /dev/sdb1
+pvremove /dev/sdc1
+pvremove /dev/sdd1
+
+
     
 
 
