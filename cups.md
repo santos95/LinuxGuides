@@ -52,7 +52,7 @@
     the command does:
     Adds a printer named hpM604 to CUPS.
     Uses a generic PCL driver (generpcl.ppd).
-    Connects to a network printer at IP 172.16.199.22 using the JetDirect (port 9100) protocol.
+    Connects to a network printer at IP 172.16.199.22 using the JetDirect (port 9100) protocol. -use websocket
     Enables the printer so it can start receiving jobs immediately.
 
     sudo lpadmin -p OfficePrinter -E -v ipp://192.168.1.100/ipp -m everywhere

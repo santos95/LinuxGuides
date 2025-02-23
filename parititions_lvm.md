@@ -41,7 +41,7 @@
 
 #### 2 create a volume group - once that exists pv or is initialized we can create a volume group - To create a volume group we specify one or multitple pv to be used to support that volume group, so the disk that the vg will manage in order to handle the actual read/write process from the logical volumes to the physical volumes:
     pvcreate name /dev/sdbn /dev/sdcn - require the name and the required partitions to use
-    pvcreate vgroup /dev/sdb1 /dev/sdc1 
+    vgcreate vgroup /dev/sdb1 /dev/sdc1 
 ##### to visualize
     sudo vgs
     sudo vgdisplay
